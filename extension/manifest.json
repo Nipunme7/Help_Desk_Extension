@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Help Desk Ticket Watch",
+  "version": "0.1.0",
+  "description": "Warns when someone else on the help desk is viewing the same Kbox ticket.",
+  "permissions": ["tabs", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Help Desk"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://katie.luther.edu/*"],
+      "js": ["content/banner.js"]
+    }
+  ]
+}

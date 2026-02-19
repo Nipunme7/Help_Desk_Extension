@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Help Desk</title>
+  <style>
+    body {
+      width: 280px;
+      padding: 12px;
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+    }
+    h2 { margin: 0 0 8px; font-size: 16px; }
+    .row { margin-bottom: 8px; }
+    .warning { background: #fee; padding: 8px; border-radius: 4px; margin-top: 8px; }
+    input { width: 100%; box-sizing: border-box; padding: 6px; margin-top: 4px; }
+    button { padding: 6px 12px; margin-top: 8px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Help Desk Ticket Watch</h2>
+  <div class="row">
+    <strong>Status</strong>
+    <div id="status">Loading…</div>
+  </div>
+  <div class="row" id="warningRow" style="display: none;">
+    <div class="warning" id="warningText"></div>
+  </div>
+  <div class="row">
+    <strong>Backend URL</strong>
+    <input type="text" id="apiBase" placeholder="http://localhost:8000" />
+    <button id="saveApi">Save</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual envs
+backend/.venv/
+venv/
+ENV/
+
+# Node / frontend
+node_modules/
+
+# Cursor / IDE metadata
+.cursor/
+.vscode/
