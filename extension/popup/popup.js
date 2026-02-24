@@ -24,8 +24,10 @@ async function loadStatus() {
     if (res.ticketId) {
       const viewing = await chrome.runtime.sendMessage({ type: 'getViewing', ticketId: res.ticketId });
       if (viewing && viewing.others && viewing.others.length > 0) {
+        const names = viewing.others.map((o) => o.username || 'Unknown').filter(Boolean);
         warningRow.style.display = 'block';
-        warningText.textContent = `Someone else is viewing ticket ${res.ticketId}. Avoid duplicate work.`;
+        const verb = names.length === 1 ? 'is' : 'are';
+        warningText.textContent = names.join(', ') + ' ' + verb + ' working on this ticket.';
       } else {
         warningRow.style.display = 'none';
       }

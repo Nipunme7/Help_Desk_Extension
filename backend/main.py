@@ -34,13 +34,20 @@ app.add_middleware(
 class ViewingBody(BaseModel):
     ticket_id: str = Field(..., min_length=1)
     uuid: str = Field(..., min_length=1)
+    url: str = ""
+    username: str = ""
 
 
 @app.post("/api/viewing")
 def post_viewing(body: ViewingBody):
-    """Register or refresh: this machine is viewing this ticket."""
-    logger.info(f"Registering: uuid={body.uuid[:8]}... ticket_id={body.ticket_id}")
-    viewing.add_or_refresh(uuid=body.uuid, ticket_id=body.ticket_id)
+    """Register or refresh: this machine is viewing this ticket (uuid, url, username)."""
+    logger.info(f"Registering: uuid={body.uuid[:8]}... ticket_id={body.ticket_id} username={body.username}")
+    viewing.add_or_refresh(
+        uuid=body.uuid,
+        ticket_id=body.ticket_id,
+        url=body.url,
+        username=body.username,
+    )
     return {"ok": True}
 
 
@@ -54,7 +61,7 @@ def post_heartbeat(body: ViewingBody):
 
 @app.get("/api/viewing")
 def get_viewing(ticket_id: str = Query(..., min_length=1)):
-    """Return list of active viewings for this ticket (recent heartbeat)."""
+    """Return list of active viewings for this ticket (includes username for each)."""
     result = viewing.get_active(ticket_id=ticket_id)
     logger.info(f"GET viewing ticket_id={ticket_id}: {len(result)} device(s)")
     return result

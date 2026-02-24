@@ -79,13 +79,14 @@ def test_post_viewing_200():
 
 
 def test_post_viewing_then_get_viewing():
-    client.post("/api/viewing", json={"ticket_id": "123", "uuid": "my-uuid"})
+    client.post("/api/viewing", json={"ticket_id": "123", "uuid": "my-uuid", "url": "https://example.com", "username": "Nipun Yonjan"})
     r = client.get("/api/viewing", params={"ticket_id": "123"})
     assert r.status_code == 200
     data = r.json()
     assert len(data) == 1
     assert data[0]["ticket_id"] == "123"
     assert data[0]["uuid"] == "my-uuid"
+    assert data[0]["username"] == "Nipun Yonjan"
     assert data[0]["status"] == "active"
 
 

@@ -1,26 +1,32 @@
 """
-In-memory store: list of { uuid, ticket_id, heartbeat, status }.
+In-memory store: list of { uuid, ticket_id, username, url, heartbeat, status }.
 Exposes add_or_refresh, heartbeat, get_active. get_active prunes stale entries.
 """
 import time
 
 # Consider a record stale if no heartbeat for this many seconds.
-HEARTBEAT_TIMEOUT_SEC = 60
+HEARTBEAT_TIMEOUT_SEC = 20
 
 _viewings: list[dict] = []
 
 
-def add_or_refresh(uuid: str, ticket_id: str) -> None:
+def add_or_refresh(uuid: str, ticket_id: str, url: str = "", username: str = "") -> None:
     """Add a new viewing or refresh heartbeat/status for existing (uuid, ticket_id)."""
     now = time.time()
     for r in _viewings:
         if r["uuid"] == uuid and r["ticket_id"] == ticket_id:
             r["heartbeat"] = now
             r["status"] = "active"
+            if url:
+                r["url"] = url
+            if username:
+                r["username"] = username
             return
     _viewings.append({
         "uuid": uuid,
         "ticket_id": ticket_id,
+        "username": username or "",
+        "url": url or "",
         "heartbeat": now,
         "status": "active",
     })
