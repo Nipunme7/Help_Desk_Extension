@@ -132,9 +132,16 @@ async function onTabUpdated(tabId, changeInfo, tab) {
 }
 
 async function onTabActivated(activeInfo) {
+  // Always stop the previous heartbeat; only the newly active tab can restart it.
+  stopHeartbeat();
   const tab = await chrome.tabs.get(activeInfo.tabId).catch(() => null);
-  if (tab?.url && !parseTicketIdFromUrl(tab.url)) {
-    stopHeartbeat();
+  if (tab?.url && parseTicketIdFromUrl(tab.url)) {
+    // Tell the ticket tab to (re)register itself with username and update conflicts.
+    try {
+      chrome.tabs.sendMessage(activeInfo.tabId, { type: 'tabActivatedForTicket' });
+    } catch {
+      // Ignore if no content script is attached.
+    }
   }
 }
 
@@ -162,6 +169,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       const myUuid = await getOrCreateUuid();
       const others = (list || []).filter((v) => v.uuid !== myUuid);
       return { viewers: list, others };
+    }
+    if (msg.type === 'tabHidden' && msg.ticket_id) {
+      if (currentTicketId === msg.ticket_id) stopHeartbeat();
+      return { ok: true };
     }
     if (msg.type === 'registerViewing' && msg.ticket_id && msg.username) {
       const uuid = await getOrCreateUuid();

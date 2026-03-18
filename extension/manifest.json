@@ -3,8 +3,13 @@
   "name": "Help Desk Ticket Watch",
   "version": "0.1.0",
   "description": "Warns when someone else on the help desk is viewing the same ticket.",
-  "permissions": ["tabs", "storage"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "background": {
     "service_worker": "background.js"
   },
@@ -14,8 +19,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://help.luther.edu/adminui/ticket.php*"],
-      "js": ["content/userinfo.js"]
+      "matches": [
+        "*://help.luther.edu/adminui/ticket.php*"
+      ],
+      "js": [
+        "content/userinfo.js"
+      ]
     }
   ]
 }
